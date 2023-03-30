@@ -1,0 +1,22 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Thierry
+  description: MySQL 5.x for Debian/Ubuntu/RedHat/CentOS.
+  company: "DSG"
+  license: "DSG"
+  min_ansible_version: 1.4
+  platforms:
+  - name: Debian
+    versions:
+    - all
+  - name: Ubuntu
+    versions:
+    - all
+  - name: CentOS
+    versions:
+    - all
+  categories:
+    - web
+    - database:sql

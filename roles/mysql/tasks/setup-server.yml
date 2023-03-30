@@ -1,0 +1,32 @@
+---
+- name: Update MySQL Configuration
+  become: yes
+  template:
+    src: "zz_override.cnf.j2"
+    dest: "{{ mysql.conf_dir }}/zz_override.cnf"
+    mode: 0644
+  notify: restart mysql
+
+# TODO: Use a process manager, see: http://blog.crocodoc.com/post/48703468992/process-managers-the-good-the-bad-and-the-ugly
+
+- name: Create DB users
+  become: yes
+  mysql_user:
+    name: "{{ item.name }}"
+    password: "{{ item.password | default() }}"
+    priv: "{{ item.priv  | default('') }}"
+    state: "{{ item.state | default('present') }}"
+    host: "{{ item.host | default('localhost') }}"
+    check_implicit_admin: yes
+  with_items: "{{ mysql.users }}"
+  no_log: False
+  tags: mysqlusers
+
+- name: Make sure DBs are present
+  become: yes
+  mysql_db:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+    encoding: "utf8"
+    collation: "utf8_general_ci"
+  with_items: "{{ mysql.databases }}"
